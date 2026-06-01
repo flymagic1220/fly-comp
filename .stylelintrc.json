@@ -1,0 +1,3 @@
+{
+  "extends": "@fly/stylelint-config"
+}

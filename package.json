@@ -15,9 +15,11 @@
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
+    "@fly/stylelint-config": "workspace:^",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.5",
     "prettier": "^3.7.4",
+    "stylelint": "^17.0.0",
     "turbo": "^2.8.12",
     "typescript": "5.9.2"
   },

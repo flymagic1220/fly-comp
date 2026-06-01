@@ -1,0 +1,16 @@
+{
+  "name": "@fly/stylelint-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "dependencies": {
+    "stylelint": "^17.0.0",
+    "stylelint-config-recess-order": "^6.0.0",
+    "stylelint-config-recommended-vue": "^1.6.0",
+    "stylelint-config-standard": "^38.0.0"
+  }
+}
