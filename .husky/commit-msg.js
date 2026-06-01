@@ -1,4 +1,5 @@
 import { execSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 const [commitMsgFile] = process.argv.slice(2);
 if (!commitMsgFile) {
   console.error('❌ Commit message file not provided');
