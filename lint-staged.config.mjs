@@ -19,8 +19,8 @@ function findEslintConfig(dir) {
 const ROOT_DIR = path.resolve(import.meta.dirname);
 
 export default {
-  '*.{json,md,html,css,scss,less}': ['stylelint --fix', 'prettier --ignore-unknown --write'],
-  '*.vue': ['stylelint --fix', 'prettier --ignore-unknown --write'],
+  '*.{json,md,html,css,scss,less,vue}': ['prettier --ignore-unknown --write'],
+  '*.{css,scss,less,vue}':['stylelint --fix'],
   '*.{js,jsx,ts,tsx,vue}': (stagedFiles) => {
     const filesMap = new Map();
 
