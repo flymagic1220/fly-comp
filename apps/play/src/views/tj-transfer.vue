@@ -1,1 +1,5 @@
-<template>transfer</template>
+<template>
+  <div>
+    <fl-transfer />
+  </div>
+</template>
