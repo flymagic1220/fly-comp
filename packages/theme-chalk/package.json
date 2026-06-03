@@ -1,0 +1,13 @@
+{
+  "name": "@fly/theme-chalk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.scss",
+    "./mixins": "./src/mixins/mixins.scss"
+  },
+  "devDependencies": {
+    "sass": "^1.100.0"
+  }
+}

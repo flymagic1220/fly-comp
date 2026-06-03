@@ -1,0 +1,36 @@
+@use 'config' as *;
+@forward 'config';
+
+/*
+使用 @include b(button) { xxx }
+编译后 .f-button { xxx }
+
+scoped 下会变成 .f-button[data-v-xxx] { xxx }，样式不会泄漏
+*/
+@mixin b($block) {
+  $b: $namespace + '-' + $block;
+  .#{$b} {
+    @content;
+  }
+}
+
+// &.is-disabled => .f-button.is-disabled
+@mixin when($state) {
+  &.#{$state-prefix + $state} {
+    @content;
+  }
+}
+
+// &--primary => .f-button--primary
+@mixin m($modifier) {
+  &#{$modifier-separator + $modifier} {
+    @content;
+  }
+}
+
+// &__header => .f-button__header
+@mixin e($element) {
+  &#{$element-separator + $element} {
+    @content;
+  }
+}
