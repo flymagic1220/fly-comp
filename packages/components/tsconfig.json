@@ -1,0 +1,8 @@
+{
+  "extends": "@fly/typescript-config/vue-library.json",
+  "compilerOptions": {
+    "isolatedModules": true
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["src", "types/**/*.d.ts"]
+}
