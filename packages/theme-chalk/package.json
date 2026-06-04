@@ -4,10 +4,22 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./index.scss",
+    ".": "./src/index.scss",
     "./mixins": "./src/mixins/mixins.scss"
   },
+  "scripts": {
+    "build": "gulp build"
+  },
   "devDependencies": {
+    "@types/gulp-autoprefixer": "^0.0.37",
+    "autoprefixer": "^10.4.0",
+    "chalk": "^5.4.0",
+    "consola": "^3.4.0",
+    "cssnano": "^7.0.0",
+    "gulp": "^5.0.1",
+    "gulp-autoprefixer": "^9.0.0",
+    "gulp-sass": "^6.0.0",
+    "postcss": "^8.4.0",
     "sass": "^1.100.0"
   }
 }
