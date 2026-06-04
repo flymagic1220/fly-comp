@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@fly/theme-chalk": "workspace:*",
+    "@fly/eslint-config": "workspace:*",
     "sass": "^1.100.0",
     "vue": "^3.5.25"
   },
