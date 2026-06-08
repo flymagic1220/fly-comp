@@ -23,6 +23,9 @@ importers:
       '@fly/stylelint-config':
         specifier: workspace:^
         version: link:packages/stylelint-config
+      dayjs:
+        specifier: ^1.11.21
+        version: 1.11.21
       husky:
         specifier: ^9.1.7
         version: 9.1.7

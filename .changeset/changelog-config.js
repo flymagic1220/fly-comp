@@ -46,7 +46,7 @@ const getBaseTag = (packageName) => {
   
   // 降级2：全局初始 tag
   try {
-    const initTag = execSync('git tag --list "v0.0.0*" | head -1', { encoding: 'utf-8' }).trim();
+    const initTag = execSync('git tag --list "v1.0.0" | head -1', { encoding: 'utf-8' }).trim();
     if (initTag) return initTag;
   } catch {}
   
