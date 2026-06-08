@@ -13,6 +13,8 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@changesets/changelog-git": "^0.2.1",
+    "@changesets/cli": "^2.31.0",
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
     "@fly/stylelint-config": "workspace:^",
