@@ -12,7 +12,8 @@
     "check-types": "turbo run check-types",
     "prepare": "husky",
     "changeset": "changeset",
-    "version": "changeset version"
+    "version": "changeset version",
+    "publish": "turbo run build --filter=./packages/* && pnpm run npm-login && pnpm changeset publish --registry=http://82.156.128.233:4873/"
   },
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.1",
