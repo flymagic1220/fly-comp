@@ -14,7 +14,9 @@
     "changeset": "changeset",
     "version": "changeset version",
     "npm-login": "node scripts/npm-login.cjs",
-    "publish": "turbo run build --filter=./packages/* && pnpm run npm-login && pnpm changeset publish"
+    "prepublish": "pnpm install",
+    "publish": "turbo run build --filter=./packages/* && pnpm run npm-login && pnpm changeset publish",
+    "postpublish": "git push && git push --tags && node scripts/post-publish-tip.cjs"
   },
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.1",
