@@ -1,9 +1,17 @@
 {
   "name": "@fly/typescript-config",
   "version": "1.0.1",
-  "private": true,
-  "license": "MIT",
+  "description": "Fly shared TypeScript configurations",
+  "keywords": [
+    "typescript",
+    "tsconfig",
+    "fly"
+  ],
+  "author": "",
+  "license": "ISC",
+  "homepage": "",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "http://82.156.128.233:4873/"
   }
 }
