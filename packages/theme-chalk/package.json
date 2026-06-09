@@ -1,12 +1,24 @@
 {
   "name": "@fly/theme-chalk",
   "version": "1.0.1",
-  "private": true,
+  "description": "Fly UI theme styles",
+  "keywords": [
+    "vue3",
+    "theme",
+    "scss",
+    "fly"
+  ],
+  "author": "",
+  "license": "ISC",
+  "homepage": "",
   "type": "module",
   "exports": {
     ".": "./src/index.scss",
     "./mixins": "./src/mixins/mixins.scss"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "gulp build"
   },
@@ -21,5 +33,9 @@
     "gulp-sass": "^6.0.0",
     "postcss": "^8.4.0",
     "sass": "^1.100.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "http://82.156.128.233:4873/"
   }
 }
