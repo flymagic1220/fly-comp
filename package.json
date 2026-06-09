@@ -14,7 +14,7 @@
     "changeset": "changeset",
     "version": "changeset version",
     "npm-login": "node scripts/npm-login.cjs",
-    "publish": "turbo run build --filter=./packages/* && pnpm run npm-login && pnpm changeset publish --registry=http://82.156.128.233:4873/"
+    "publish": "turbo run build --filter=./packages/* && pnpm run npm-login && pnpm changeset publish"
   },
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.1",
