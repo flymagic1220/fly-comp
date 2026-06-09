@@ -1,6 +1,6 @@
 {
   "name": "@fly/stylelint-config",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Fly shared Stylelint configuration",
   "keywords": [
     "stylelint",

@@ -1,6 +1,6 @@
 {
   "name": "@fly/theme-chalk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Fly UI theme styles",
   "keywords": [
     "vue3",
