@@ -1,3 +1,4 @@
+import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { dest, parallel, series, src } from 'gulp'
@@ -14,6 +15,17 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const distFolder = path.resolve(__dirname, 'dist')
+
+/**
+ * 清理 dist 目录
+ */
+function cleanDist(done) {
+  if (fs.existsSync(distFolder)) {
+    fs.rmSync(distFolder, { recursive: true, force: true })
+    consola.info(chalk.yellow('dist 目录已清理'))
+  }
+  done()
+}
 
 /**
  * 编译 SCSS 为 CSS
@@ -92,6 +104,7 @@ function minifyCss() {
  * 3. 复制 SCSS 源文件供下游引用
  */
 export const build = series(
+  cleanDist,
   buildSass,
   minifyCss,
   parallel(copyScssSource)
