@@ -1,5 +1,11 @@
 # @fly/theme-chalk
 
+## 1.0.3
+
+### Patch Changes
+
+获取变更记录失败
+
 ## 1.0.2
 
 ### Patch Changes
