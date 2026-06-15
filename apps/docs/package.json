@@ -1,0 +1,26 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@vueuse/core": "^14.3.0",
+    "element-plus": "^2.13.3",
+    "vitepress-mermaid-renderer": "^1.1.26",
+    "vue": "^3.5.25"
+  },
+  "devDependencies": {
+    "@fly/eslint-config": "workspace:*",
+    "@fly/typescript-config": "workspace:*",
+    "@vitejs/plugin-vue-jsx": "^5.1.5",
+    "sass": "^1.100.0",
+    "typescript": "^6.0.3",
+    "vitepress": "^1.6.4"
+  }
+}

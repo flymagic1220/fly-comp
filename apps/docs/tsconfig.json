@@ -1,0 +1,17 @@
+{
+  "extends": "@fly/typescript-config/vue-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    ".vitepress/**/*.ts",
+    ".vitepress/**/*.mts",
+    ".vitepress/**/*.vue",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/**/*.md"
+  ]
+}

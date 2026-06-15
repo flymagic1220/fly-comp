@@ -1,0 +1,51 @@
+:root {
+  --vp-c-brand-1: var(--el-color-primary);
+  --vp-c-brand-2: var(--el-color-primary-light-3);
+  --vp-c-brand-3: var(--el-color-primary-light-5);
+  --vp-c-brand-soft: var(--el-color-primary-light-8);
+  --vp-layout-max-width: 1680px;
+}
+
+.vp-doc table {
+  margin: 0;
+  border-collapse: unset;
+}
+
+.vp-doc th,
+.vp-doc td {
+  border: unset;
+}
+
+.vp-doc tr {
+  border-top: unset;
+}
+
+.vp-doc tr:nth-child(2n) {
+  background-color: unset;
+}
+
+.vp-doc [class*='language-'] code {
+  font-size: 1em;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: 100% !important;
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4,
+.vp-doc h5,
+.vp-doc h6,
+.VPHero,
+.VPFeature,
+.VPNavBarTitle .title,
+.VPSidebarItem.level-0,
+.VPSidebarItem.level-0 .text,
+.VPSidebarItem.level-1 .text,
+.VPNavBarMenuLink,
+.outline-title {
+  font-family: var(--tj-font-family-medium);
+  font-weight: 400;
+}
