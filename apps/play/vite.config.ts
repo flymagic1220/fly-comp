@@ -11,6 +11,7 @@ export default defineConfig({
     AutoImport({
       imports: ["vue", "vue-router", "pinia"],
       resolvers: [ElementPlusResolver()], // 解析 ElMessage 这类 API，importStyle: false 表示不引入样式通过main.ts中引入css文件
+      ignore: ["h"],
     }),
     Components({
       resolvers: [ElementPlusResolver()], // 也可以解析 <el-button> 这类组件
