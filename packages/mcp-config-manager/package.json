@@ -1,0 +1,34 @@
+{
+  "name": "@fly/mcp-config-manager",
+  "version": "1.0.0",
+  "description": "Universal MCP configuration manager for multiple IDEs",
+  "type": "module",
+  "main": "dist/setup.js",
+  "bin": {
+    "mcp-setup": "./dist/setup.js"
+  },
+  "files": [
+    "dist",
+    "config-files",
+    "config-template.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "mcp",
+    "codebuddy",
+    "cursor",
+    "claude",
+    "configuration"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@fly/eslint-config": "workspace:*",
+    "@fly/typescript-config": "workspace:*",
+    "@types/node": "^24.10.1",
+    "typescript": "^6.0.3"
+  }
+}
