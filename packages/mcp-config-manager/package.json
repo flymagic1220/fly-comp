@@ -9,8 +9,7 @@
   },
   "files": [
     "dist",
-    "config-files",
-    "config-template.json"
+    "templates"
   ],
   "scripts": {
     "build": "tsc",
@@ -30,5 +29,9 @@
     "@fly/typescript-config": "workspace:*",
     "@types/node": "^24.10.1",
     "typescript": "^6.0.3"
-  }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
 }

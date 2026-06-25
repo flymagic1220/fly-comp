@@ -1,3 +1,4 @@
 {
+  "$comment": "全局 MCP Server 配置模板。请根据团队实际使用的服务填入真实配置，获取方式见 README.md「配置 MCP Server」章节。",
   "mcpServers": {}
 }

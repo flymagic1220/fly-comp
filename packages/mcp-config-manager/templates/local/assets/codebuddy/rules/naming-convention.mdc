@@ -1,0 +1,53 @@
+---
+description: 项目级命名规范 — 文件、变量、函数、类型、API 方法的命名约定
+alwaysApply: true
+enabled: true
+provider:
+---
+
+# 命名规范
+
+> 统一标识符、文件、目录的命名约定，提升代码可读性与协作效率。
+
+## 核心原则
+
+- 命名应清晰表达**业务含义**，禁止中文、纯拼音、无意义缩写（如 `a`、`tmp`、`data1`）
+- 同一业务概念保持命名一致，禁止 `userInfo`/`userData`/`userDetail` 混用
+- 布尔变量使用 `is`/`has`/`should` 前缀
+
+## 标识符命名
+
+| 类型 | 命名方式 | 示例 |
+|------|----------|------|
+| 变量 | **camelCase** | `userInfo`、`appIdMap` |
+| 常量 | **UPPER_SNAKE_CASE** | `MAIN_PUBLIC_PATH`、`MAX_UPLOAD_SIZE` |
+| 函数 | **camelCase**，动词开头 | `getUserInfo`、`handleClick`、`formatDate` |
+| 类 | **PascalCase** | `ApiResponse`、`TaxCalculator` |
+| 接口 | **PascalCase**，业务代码加 `I` 前缀，组件库加 `Tj` 前缀 | `IUserInfo`、`TjAlert` |
+| 类型 | **PascalCase**，不加 `I` 前缀 | `ApiResponse`、`UserRole` |
+| 枚举及成员 | **PascalCase** | `enum Color { Red = 'red' }` |
+| 事件处理函数 | `handle` + 对象 + 动作 | `handleItemClick`、`handleFormSubmit` |
+
+## 文件与目录命名
+
+| 类型 | 命名方式 | 示例 |
+|------|----------|------|
+| Vue 组件文件 | **PascalCase** | `CustomAlert.vue` |
+| 目录式组件 | **PascalCase** 目录 + `index.vue` | `CodeMirror/index.vue` |
+| 页面目录 | **kebab-case** | `declaration-task`、`user-center` |
+| 工具函数文件 | **kebab-case** | `format-date.ts`、`request-client.ts` |
+| 组合式函数文件 | `use` + PascalCase | `useUserInfo.ts`、`useTableList.ts` |
+
+## API 方法命名
+
+| 操作 | 动词 | 示例 |
+|------|------|------|
+| 查询 | `fetch` / `get` | `fetchDeclarationList` |
+| 新增 | `create` / `add` | `createDeclarationTask` |
+| 修改 | `update` / `edit` | `updateApprovalConfig` |
+| 删除 | `delete` / `remove` | `deleteMenuItem` |
+| 导出 | `export` | `exportDeclarationExcel` |
+| 导入 | `import` | `importTaxSourceData` |
+| 提交 | `submit` | `submitDeclaration` |
+
+同一模块内保持动词风格一致，禁止 `queryList`/`getList`/`fetchList` 混用。
