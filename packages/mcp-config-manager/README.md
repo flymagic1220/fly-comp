@@ -185,6 +185,203 @@ uvx <包名> --help           # Python (需先安装 uv: pip install uv)
 | `npx` (Node.js) | Node.js >= 18 | 通常已随 IDE 安装                     |
 | `uvx` (Python)  | Python + uv   | `pip install uv` 或 `brew install uv` |
 
+## 内置 Skills 通用工作流
+
+本包通过 `templates/global/assets/codebuddy/skills/` 分发 5 个前端开发通用 Skill。每个 Skill 的核心工作流逻辑与具体团队/公司无关，团队相关配置统一集中在 `team-config.md` 中管理。换团队时只需修改 `team-config.md`，无需改动 SKILL.md 的流程逻辑。
+
+各 Skill 依赖的团队配置项，参见各自 SKILL.md 顶部的「团队配置」声明。
+
+---
+
+### 1. confluence-requirements — Confluence 需求文档获取
+
+**职责**：从 Confluence 获取 PRD、技术规格等文档，将 Confluence 存储格式转换为 Markdown。
+
+**通用工作流**：
+
+```
+搜索页面（CQL 全文搜索）
+  → 确认目标（单结果直接获取 / 多结果让用户选择）
+  → 获取页面（convert_to_markdown=true 自动转 Markdown）
+  → 保存到本地文件
+```
+
+| 步骤       | 说明                                                                                           |
+| ---------- | ---------------------------------------------------------------------------------------------- |
+| 搜索       | `confluence_search(query, limit)` — 支持空间限定 `space = "KEY"`、标签过滤 `label = "xxx"`     |
+| 确认       | 多结果时以列表展示（序号、标题、空间、时间），用 `ask_followup_question` 让用户选择，支持多选  |
+| 获取       | `confluence_get_page(page_id, convert_to_markdown=true)` — 直接返回 Markdown，无需手动转换     |
+| 子内容获取 | 支持 `get_page_children`（子页面列表）、`get_comments`（评论）、`get_page_history`（版本历史） |
+
+**无团队依赖的纯通用部分**：搜索→确认→获取→保存的四步流程，CQL 语法（`text ~`/`space =`/`type =`），以及 Markdown 转换逻辑。
+
+---
+
+### 2. gitlab-ops — GitLab 开发操作
+
+**职责**：通过 GitLab MCP Server + Git CLI 完成代码提交、MR 管理、Code Review、Issue 管理、流水线查询等日常开发操作。
+
+**通用工作流**（覆盖 8 个场景）：
+
+| 场景                    | 核心流程                                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| ① 代码提交与推送        | 生成 commit message（jira-issues 联动自动生成 or 用户输入）→ `git add` → `git commit` → `git pull --rebase` → `git push` |
+| ② 创建 MR               | 识别 project_id → 选源/目标分支 → 选指派人 → 确认信息 → `create_merge_request`                                           |
+| ③ MR 审查与 Code Review | 查看变更文件列表 → 查看 diff → 分析讨论 → 审批/评论/合并（合并前检查审批+流水线+冲突+讨论）                              |
+| ④ Issue 管理            | 搜索/筛选 → 查看详情 → 创建/更新（支持标签、指派人、里程碑、截止日期）                                                   |
+| ⑤ 提交历史分析          | 按分支/时间/文件/作者过滤 → 查看 commit → blame 追溯行级变更                                                             |
+| ⑥ 流水线状态查询        | 查看 MR 流水线状态 → 查看 commit CI 状态                                                                                 |
+| ⑦ 分支管理              | 列出 → 创建（从指定 ref）→ 删除 → 保护/取消保护                                                                          |
+| ⑧ 仓库浏览与搜索        | 浏览目录树 → 查看文件内容 → 跨项目搜索代码 → 在线编辑文件                                                                |
+
+**关键通用规则**：
+
+- `project_id` 从 `git remote get-url origin` 提取路径后匹配，同一会话内复用
+- `git pull --rebase` 出现冲突必须停止，让用户手动处理
+- 合并 MR 前必须逐一检查审批状态、流水线状态、冲突状态、讨论状态
+- MCP 工具采用按需激活的 category 机制，未激活时调用 `discover_tools`
+
+**无团队依赖的纯通用部分**：所有 8 个场景的操作流程、project_id 识别机制、合并前检查清单、工具集 category 按需激活机制。
+
+---
+
+### 3. jira-issues — JIRA 问题处理
+
+**职责**：获取和分析 JIRA Bug/Task/Story，辅助代码定位、提供修复方案、验证修复效果。
+
+**通用工作流**（覆盖 5 个场景）：
+
+| 场景               | 核心流程                                                                                        |
+| ------------------ | ----------------------------------------------------------------------------------------------- |
+| ① 获取单个问题     | `jira_get_issue(issue_key, comment_limit)` → 展示摘要（标题、类型、状态、负责人、优先级、描述） |
+| ② 搜索问题         | **两步法**：宽查询摸底（观察实际字段名）→ 用实际字段名精确过滤。禁止用英文猜测本地化字段值      |
+| ③ 修复 Bug（重点） | **三阶段**：分析与方案（只读诊断）→ 执行修改（用户确认后）→ 验证修复（代码+运行时双层验证）     |
+| ④ 创建问题         | 确认项目及可用类型 → 收集标题/描述/类型/优先级 → `jira_create_issue`                            |
+| ⑤ 更新问题         | 获取可用流转（`jira_get_transitions`）→ 流转状态 → 添加评论 → 分配人员                          |
+
+**Bug 修复三阶段（最核心的通用流程）**：
+
+```
+阶段一：分析与方案（只读，不修改代码）
+  获取 Bug → 提取现象/复现步骤/期望结果
+  → 诊断归属（curl 直调 API 判断前端/后端）
+  → 定位代码（路由注释 → 精确文案搜索 → code-explorer 广搜，三级策略）
+  → 输出完整分析模板（含根因分析 + 改动方案 + 影响面评估）
+  → 等待用户确认
+
+阶段二：执行修改（用户确认后）
+  按方案逐一修改 → 汇总变更清单
+  → 可选：添加 JIRA 评论 / 更新状态
+  → 安全审查（认证/权限/敏感数据）
+
+阶段三：验证修复（修改完成后）
+  代码验证（重新读取确认改动一致）
+  + 运行时验证（playwright-cli UI 验证 / curl API 验证 / 边界值验证）
+  → 汇总验证结果 → 通过后提醒可触发 gitlab-ops 提交流程
+```
+
+**关键通用规则**：
+
+- JIRA 字段名因本地化而异，禁止用英文值（Bug/Closed/Open）猜测，必须先用宽查询摸底
+- 数据展示类 Bug 必须先诊断前后端归属（curl 直调 API），避免前端误修后端问题
+- 代码定位三级策略：路由注释定位 > 精确文案搜索 > code-explorer 广搜
+- 运行时验证前检查 playwright-cli 工具链、启动对应环境的本地服务、确认路由和登录状态
+- 验证完成后不立即关闭浏览器，先询问是否还有其他 Bug
+
+**无团队依赖的纯通用部分**：Bug 修复三阶段流程、前后端诊断决策树、三级代码定位策略、JQL 两步搜索法、运行时验证准备流程、Element Plus 组件操作指南。
+
+---
+
+### 4. requirement-to-plan — 需求实现工作流
+
+**职责**：将"一句话需求"串联需求文档、接口文档、设计稿，自动生成结构化的前端开发计划。
+
+**通用工作流（4 步串联，严格顺序执行）**：
+
+```
+第 1 步：获取需求文档
+  搜索 Confluence → 确认目标页面 → 创建需求目录 → 保存 PRD.md
+
+第 2 步：获取接口文档
+  提取关键词 → 检查现有 API 封装（优先复用）
+  → 读取网关配置 → 发现服务端点
+  → search-tags 跨服务定位 → list 查看分组接口 → detail 获取详情
+  → 汇总保存 API文档.md（必须显式 write_to_file）
+
+第 3 步：获取设计稿（不可跳过，必须执行判断）
+  分析需求是否涉及 UI 变更
+  → 纯逻辑改动：跳过并标注
+  → UI 变更：扫描 PRD 中的 MasterGo 链接 → 引导用户提供 → mcp__getMeta 获取 → 保存设计稿.md
+
+第 4 步：生成开发计划
+  汇总前 3 步信息 → 按模板生成结构化计划
+  （需求摘要 + 涉及页面 + 接口清单 + 组件清单 + 设计稿关键信息 + 数据流 + 实现步骤）
+  → 保存开发计划.md
+```
+
+**关键通用规则**：
+
+- 必须严格按 1→2→3→4 顺序执行，禁止跳过任何步骤
+- 第 3 步无论结论如何都必须显式执行判断并输出
+- 接口搜索优先复用项目现有封装（✅ 已有），找不到才从 Swagger 获取（🔍 需对接）
+- Swagger CLI 工具只输出到 stdout，不自动写文件，必须显式 `write_to_file`
+- 搜索结果为 0 时告知用户，≥2 条时让用户选择
+- 组件选择遵循优先级规则：业务组件库 > UI 框架 > 自定义
+
+**无团队依赖的纯通用部分**：4 步串联流程、需求目录创建与文件管理、接口搜索与复用策略、search-tags→list→detail 的网关定位链路、设计稿获取决策逻辑、开发计划模板结构、组件优先级选择规则。
+
+---
+
+### 5. swagger-api-docs — Swagger/OpenAPI 接口文档获取
+
+**职责**：从运行中的后端服务获取 Swagger/OpenAPI 文档，解析为结构化 Markdown，支持 Knife4j 微服务网关。
+
+**通用工作流**：
+
+```
+第 1 步：确定文档地址
+  用户提供 → 直接使用 / 自动探测 v2→v3 / 引导用户提供
+
+第 2 步：选择模式执行
+  ├── 单服务模式：fetch / list / search / detail
+  └── Knife4j 网关模式：services → search-tags → list --tag → detail
+
+第 3 步：处理结果
+  stdout 输出 → shell 重定向保存 / AI write_to_file 保存
+
+第 4 步：常见问题排查
+  连接拒绝 / 401/403 / 404 / JSON 解析失败
+```
+
+**单服务模式命令**：
+
+| 命令     | 用途                        |
+| -------- | --------------------------- |
+| `fetch`  | 获取完整 Markdown 接口文档  |
+| `list`   | 列出所有接口（按标签分组）  |
+| `search` | 按路径/摘要/标签模糊搜索    |
+| `detail` | 查看单个接口的请求/响应结构 |
+
+**Knife4j 网关模式命令**：
+
+| 命令          | 用途                                                           |
+| ------------- | -------------------------------------------------------------- |
+| `services`    | 列出网关下所有微服务及其 API 文档端点（`--detail` 含接口统计） |
+| `search-tags` | 跨所有 restApi 服务搜索标签，快速定位接口所在服务              |
+| `tags`        | 查看单个服务的标签分组                                         |
+
+**关键通用规则**：
+
+- 不同服务使用不同 Swagger 端点版本（v2/v3），不能猜测，必须用 `services --detail` 发现
+- 所有命令仅输出到 stdout，不自动写文件
+- 支持 Bearer Token 和 Basic Auth 两种认证方式
+- 支持解析本地 JSON 文件（`parse --file`）
+- Node.js 版零依赖（推荐），Python 版作为备选
+
+**无团队依赖的纯通用部分**：所有 CLI 命令逻辑、Swagger 文档解析引擎、Knife4j 网关三步定位法（search-tags→list→detail）、Markdown 输出格式、认证方式、常见问题排查表。
+
+---
+
 ## 开发
 
 ```bash
@@ -200,14 +397,16 @@ pnpm dev      # watch 模式编译
 
 > 不同团队使用的服务（JIRA/Confluence 域名、GitLab 实例）、MCP 社区包、内部规范都可能不同。
 
-| 修改点            | 文件                                        | 说明                                          |
-| ----------------- | ------------------------------------------- | --------------------------------------------- |
-| MCP Server 配置   | `templates/global/mcp.json`                 | 修改服务域名、包名、添加/删除 Server          |
-| 团队通用 skill    | `templates/global/assets/codebuddy/skills/` | 替换为团队实际使用的 skill 文件               |
-| 团队通用 rule     | `templates/global/assets/codebuddy/rules/`  | 替换为团队编码规范、命名约定等                |
-| 项目级 MCP Server | `templates/local/mcp.json`                  | 项目专属服务的域名和包名                      |
-| 项目级 rule       | `templates/local/assets/codebuddy/rules/`   | 项目级命名规范、业务规则等                    |
-| 合并策略          | `src/merger.ts`                             | 占位符格式、数组匹配策略如需调整见文件内 TODO |
+| 修改点                  | 文件                                                      | 说明                                                                             |
+| ----------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **⚡ 团队配置（推荐）** | `templates/global/assets/codebuddy/skills/team-config.md` | **换团队只改这一个文件**：JIRA Key、GitLab 地址、组件库、目录约定、Commit 规范等 |
+| MCP Server 配置         | `templates/global/mcp.json`                               | 修改服务域名、包名、添加/删除 Server                                             |
+| 团队通用 rule           | `templates/global/assets/codebuddy/rules/`                | 替换为团队编码规范、命名约定等                                                   |
+| 项目级 MCP Server       | `templates/local/mcp.json`                                | 项目专属服务的域名和包名                                                         |
+| 项目级 rule             | `templates/local/assets/codebuddy/rules/`                 | 项目级命名规范、业务规则等                                                       |
+| 合并策略                | `src/merger.ts`                                           | 占位符格式、数组匹配策略如需调整见文件内 TODO                                    |
+
+> **Skills 无需修改**：所有 SKILL.md 的通用工作流逻辑与团队无关，团队相关配置通过 `（见团队配置：xxx）` 引用 `team-config.md`。详见「内置 Skills 通用工作流」章节。
 
 ### 🔧 更换/新增 IDE
 
